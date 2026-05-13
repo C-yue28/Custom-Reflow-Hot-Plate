@@ -17,5 +17,28 @@
       Heating rates need to be controlled during the preheat phase to prevent bubbling/splatter of the solder paste and warping of the components.
     </li>
   </ul>
-  The thermal soak phase temperature needs to be held steady to ensure even heating. The peak temperature, achieved during reflow, needs to be tuned so that the sensitive components are not damaged while the solder paste is free to flow; due to the forces of surface tension, the paste will "pull" the pins directly over the copper on the board and ensure a strong connection. Cooling needs to be gradual so that the joints are solid and no thermal shock effects occur. </p>
+  <li>
+    Thermal soak
+  </li>
+  <ul>
+    <li>
+      The thermal soak phase temperature needs to be held steady to ensure even heating.    
+    </li>
+  </ul>
+  <li>
+    Reflow
+  </li>
+  <ul>
+    <li>
+      The peak temperature, achieved during reflow, needs to be tuned so that the sensitive components are not damaged while the solder paste is free to flow; due to the forces of surface tension, the paste will "pull" the pins directly over the copper on the board and ensure a strong connection.
+    </li>
+  </ul>
+  <li>
+    Cooling
+  </li>
+  <ul>
+    <li>
+      Cooling needs to be gradual so that the joints are solid and no thermal shock effects occur.
+    </li>
+  </ul>
 </ol>
