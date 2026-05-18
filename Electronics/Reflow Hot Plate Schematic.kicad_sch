@@ -3895,16 +3895,6 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 86.36) (xy 119.38 86.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "97bfb6a0-eed9-4bfd-b81d-893547138bc3")
-	)
-	(wire
-		(pts
 			(xy 200.66 111.76) (xy 200.66 101.6)
 		)
 		(stroke
@@ -4082,6 +4072,16 @@
 			(type default)
 		)
 		(uuid "ba667bfe-7ce8-44e2-9bd6-1626afc77d0e")
+	)
+	(wire
+		(pts
+			(xy 106.68 63.5) (xy 119.38 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bf3fe6ca-61d1-42e4-b675-ab7d6f61a3c8")
 	)
 	(wire
 		(pts
@@ -4283,16 +4283,6 @@
 		)
 		(uuid "fe9f1729-d750-466f-8fa0-640c8eb83143")
 	)
-	(wire
-		(pts
-			(xy 109.22 92.71) (xy 109.22 86.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ffda6508-894b-444f-b0bc-c0d62e0754ba")
-	)
 	(label "SRCLK"
 		(at 106.68 66.04 0)
 		(effects
@@ -4353,6 +4343,16 @@
 		)
 		(uuid "39601e4b-a243-493c-a680-a945c7c030fb")
 	)
+	(label "SO"
+		(at 106.68 63.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "47357403-f7f5-4c1b-aff3-2a8530f47c66")
+	)
 	(label "QG"
 		(at 154.94 130.81 0)
 		(effects
@@ -4412,6 +4412,16 @@
 			(justify left bottom)
 		)
 		(uuid "87fef91c-a83a-41fe-ae5b-fca00fbee9a0")
+	)
+	(label "SO"
+		(at 109.22 92.71 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "8cbc63d3-8212-4750-8879-c7e7a320fa8b")
 	)
 	(label "SW_1"
 		(at 106.68 58.42 0)

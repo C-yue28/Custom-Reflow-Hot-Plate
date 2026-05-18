@@ -28,6 +28,10 @@ void CY_LCD1602::begin() {
   reg.clearAll();
 }
 
+void CY_LCD1602::clear_all() {
+  writeData(SCREEN_CLEAR, true, true);
+}
+
 void CY_LCD1602::print(char* data) {
   while (*data != '\0') {
     writeData((int)*data, true, false);

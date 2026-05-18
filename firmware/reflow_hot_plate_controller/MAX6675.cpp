@@ -9,6 +9,9 @@ CY_MAX6675::CY_MAX6675(int _SCK, int _CS, int _SO) {
   pinMode(SCK, OUTPUT);
   pinMode(CS, OUTPUT);
   pinMode(SO, INPUT);
+
+  digitalWrite(CS, HIGH);
+  digitalWrite(SCK, LOW);
 }
 
 float CY_MAX6675::readData() {
@@ -20,20 +23,20 @@ float CY_MAX6675::readData() {
   // SCK fall to output data valid max 100 ns = 0.1 us, I'm just going to round it up to one microsecond, can't hurt
 
   for (int i = 0; i < 16; i++) {
-    digitalWrite(SCK, LOW);
-    delayMicroseconds(1);
-    if (digitalRead(SO)) {
-      data = data | (1 << i);
-    }
     digitalWrite(SCK, HIGH);
+    delayMicroseconds(1);
+
+    data |= digitalRead(SO) << (15-i);
+    
+    digitalWrite(SCK, LOW);
     delayMicroseconds(1);
   }
   digitalWrite(CS, HIGH);
 
-  // LSB is useless, bit 1 is useless, bit 2 is thermocouple checker, bit 15 is useless
+  // bit 0 is useless, bit 1 is useless, bit 2 is thermocouple checker, bit 15 is useless
 
   if (data & 4) return -1;
-  return (float)(data >> 3) / 4;
+  return (float)((data >> 3) & 4095)/4;
   
 
 }

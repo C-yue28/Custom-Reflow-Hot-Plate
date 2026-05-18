@@ -41,6 +41,7 @@ class CY_LCD1602 {
     void begin();
     void writeData(int data, bool mode, bool is_init);
     void print(char* data);
+    void clear_all();
 
   private:
     CY_74HC595 reg;
