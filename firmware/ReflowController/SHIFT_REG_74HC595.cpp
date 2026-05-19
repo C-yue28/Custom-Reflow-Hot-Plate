@@ -1,7 +1,7 @@
-#include "74HC595.h"
+#include "SHIFT_REG_74HC595.h"
 #include <Arduino.h>
 
-CY_74HC595::CY_74HC595(uint8_t DATA, uint8_t CLOCK, uint8_t LATCH) {
+SHIFT_REG_74HC595::SHIFT_REG_74HC595(uint8_t DATA, uint8_t CLOCK, uint8_t LATCH) {
   shift_reg_clock = CLOCK;
   reg_clock = LATCH;
   data_output = DATA;
@@ -17,12 +17,11 @@ CY_74HC595::CY_74HC595(uint8_t DATA, uint8_t CLOCK, uint8_t LATCH) {
   clearAll();
 }
 
-CY_74HC595::CY_74HC595() {
+SHIFT_REG_74HC595::SHIFT_REG_74HC595() {
 
 }
 
-
-void CY_74HC595::clearAll() {
+void SHIFT_REG_74HC595::clearAll() {
   digitalWrite(reg_clock, LOW); 
   delayMicroseconds(DELAY);
   digitalWrite(reg_clock, HIGH);
@@ -30,11 +29,11 @@ void CY_74HC595::clearAll() {
   digitalWrite(reg_clock, LOW);
 }
 
-void CY_74HC595::turnOn(uint8_t regPin) {
+void SHIFT_REG_74HC595::turnOn(uint8_t regPin) {
   writeData((uint8_t)(1 << regPin), MSBFIRST);
 }
 
-void CY_74HC595::writeData(uint8_t Q, uint8_t MODE) {
+void SHIFT_REG_74HC595::writeData(uint8_t Q, uint8_t MODE) {
 
   clearAll();
   delayMicroseconds(DELAY);

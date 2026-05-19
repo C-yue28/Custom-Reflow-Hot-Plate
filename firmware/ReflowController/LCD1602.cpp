@@ -1,12 +1,16 @@
 #include "LCD1602.h"
 #include <Arduino.h>
 
-CY_LCD1602::CY_LCD1602(int SRCLK, int RCLK, int SER) {
-  reg = CY_74HC595(SER, SRCLK, RCLK);
+LCD1602::LCD1602(int SRCLK, int RCLK, int SER) {
+  reg = SHIFT_REG_74HC595(SER, SRCLK, RCLK);
   reg.clearAll();
 }
 
-void CY_LCD1602::begin() {
+LCD1602::LCD1602() {
+  
+}
+
+void LCD1602::begin() {
 
   int function_set_initialize = (FUNCTION_SET | DL_8D) >> 4;
 
@@ -28,18 +32,22 @@ void CY_LCD1602::begin() {
   reg.clearAll();
 }
 
-void CY_LCD1602::clear_all() {
+void LCD1602::clear_all() {
   writeData(SCREEN_CLEAR, true, true);
 }
 
-void CY_LCD1602::print(char* data) {
+void LCD1602::print(const char* data) {
   while (*data != '\0') {
     writeData((int)*data, true, false);
     data++;
   }
 }
 
-void CY_LCD1602::writeData(int _data, bool mode, bool is_init) { // receives 8 bit data but we are using 4 bit interface
+void LCD1602::setRow(int row) {
+  writeData(DDRAM_AD_SET | (row*64), true, true);
+}
+
+void LCD1602::writeData(int _data, bool mode, bool is_init) { // receives 8 bit data but we are using 4 bit interface
   int data1 = (_data & 240);
   int data2 = ((_data & 15) << 4);
 

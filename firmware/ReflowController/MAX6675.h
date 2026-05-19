@@ -1,9 +1,9 @@
 #include <Arduino.h>
 
-class CY_MAX6675 {
+class MAX6675 {
 
   public:
-    CY_MAX6675(int _SCK, int _CS, int _SO);
+    MAX6675(int _SCK, int _CS, int _SO);
     float readData(void);
 
   private:

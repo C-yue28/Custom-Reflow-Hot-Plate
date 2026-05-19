@@ -1,7 +1,7 @@
 #include "MAX6675.h"
 #include <Arduino.h>
 
-CY_MAX6675::CY_MAX6675(int _SCK, int _CS, int _SO) {
+MAX6675::MAX6675(int _SCK, int _CS, int _SO) {
   SCK = _SCK;
   CS = _CS;
   SO = _SO;
@@ -14,7 +14,7 @@ CY_MAX6675::CY_MAX6675(int _SCK, int _CS, int _SO) {
   digitalWrite(SCK, LOW);
 }
 
-float CY_MAX6675::readData() {
+float MAX6675::readData() {
   digitalWrite(CS, LOW);
   delayMicroseconds(1); // minimum 100 ns = 0.1 us + some tolerance
   int data = 0;

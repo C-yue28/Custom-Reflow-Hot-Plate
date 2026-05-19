@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "74HC595.h"
+#include "SHIFT_REG_74HC595.h"
 
 #define SCREEN_CLEAR 1
 #define CURSOR_RETURN 2
@@ -16,7 +16,7 @@
 #define BLINK_ON 1
 
 // shift functions
-#define SHIFT 16
+#define SHIFT_FUNCTION 16
 #define DISPLAY_SHIFT 8
 #define RIGHT_SHIFT 4
 
@@ -34,16 +34,18 @@
 #define REGISTER_SELECT 2
 #define ENABLE 8
 
-class CY_LCD1602 {
+class LCD1602 {
 
   public:
-    CY_LCD1602(int SRCLK, int RCLK, int SER);
+    LCD1602(int SRCLK, int RCLK, int SER);
+    LCD1602();
     void begin();
     void writeData(int data, bool mode, bool is_init);
-    void print(char* data);
+    void print(const char* data);
+    void setRow(int row);
     void clear_all();
 
   private:
-    CY_74HC595 reg;
+    SHIFT_REG_74HC595 reg;
 
 };
