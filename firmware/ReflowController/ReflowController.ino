@@ -39,14 +39,7 @@ Written by Christopher Yue
 
 #define PWM_PERIOD 2000 // ms
 
-// PID tuning - KU is the value at constant oscillations, TU is the period
-#define KU 0.05
-#define TU 12
-
 // PID - zieger-nichols method
-//#define KP 0.6*KU
-#define TI 0.5*TU
-//#define TD 0.125*TU
 #define KP 0.05
 #define TD 7
 // not needed - can simply use standard form of PID equation
@@ -200,11 +193,13 @@ void setupCornerSmoothing() {
   }
 
   for (int i = 0; i < 5; i++) {
-    Serial.println(i);
+    Serial.print(i);
+    Serial.print(", ");
     for (float j = 0.0; j <= 1.0; j+=0.1) {
       Serial.print(smoothCorners[i].getTemperatureAtTime(j));
       Serial.print(", ");
     }
+    Serial.println();
   }
 
 }
