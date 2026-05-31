@@ -48,10 +48,10 @@
 ![Heating Curve](media/Heating_Curve_Test.png)
 
 <p>The controller uses a PD algorithm (Kp=0.05, Kd=Kp*Td=0.35) to maintain a mean absolute error of +-1.8 degrees Celsius.</p>
-<p>The curve shown in this diagram follows a profile given by the datasheet for the ChipQuik NC191SNL15 lead-free solder paste</p>
+<p>The curve shown in this diagram follows a profile given by the datasheet for the ChipQuik NC191SNL15 lead-free solder paste. </p>
 
 <h3>Sample testing output</h3>
-<p>The example output below is directly printed out by serial and read in by data_visualization.py (located in firmware folder). The first few lines are parameters for heating curve smoothing which are calculated automatically by the software; the following lines all include time, target temperature, actual temperature, and deviation. Some lines in the middle say "Bezier," these are for debugging the smoothing parameters. Nominal heating rate is automatically calculated based on the smoothing parameters. </p>
+<p>The example output below is directly printed out by serial and read in by data_visualization.py (located in firmware folder). The first few lines are parameters for heating curve smoothing which are calculated automatically by the software; the following lines all include time (in ms), target temperature, actual temperature, and deviation. Some lines in the middle say "Bezier," these are for debugging the smoothing parameters. Nominal heating rate is automatically calculated based on the smoothing parameters. </p>
 
 ```
 0, 91.00, 91.01, 91.04, 91.14, 91.33, 91.65, 92.13, 92.79, 93.67, 94.81, 
