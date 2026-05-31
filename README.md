@@ -44,6 +44,7 @@
 </ol>
 
 <h3>Technical details</h3>
+![testing](https://unsplash.com)
 ![Heating Curve](media/Heating_Curve_Test.png)
 
 <p>The controller uses a PD algorithm (Kp=0.05, Kd=Kp * Td=0.35) to maintain a mean absolute error of +-1.8 degrees Celsius.</p>
