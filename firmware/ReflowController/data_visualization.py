@@ -47,7 +47,10 @@ def update(x_frame):
     if len(unpacked_data) <= 2: 
         return
 
-    (time, target, actual, error) = (float(piece.split(":")[1]) for piece in unpacked_data)
+    try:
+        (time, target, actual, error) = (float(piece.split(":")[1]) for piece in unpacked_data)
+    except Exception as e:
+        return
     
     if begin:
         START_TIME = time

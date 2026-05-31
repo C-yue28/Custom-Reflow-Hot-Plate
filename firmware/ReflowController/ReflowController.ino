@@ -47,8 +47,8 @@ Written by Christopher Yue
 //#define KP 0.6*KU
 #define TI 0.5*TU
 //#define TD 0.125*TU
-#define KP 1
-#define TD 0.35
+#define KP 0.05
+#define TD 7
 // not needed - can simply use standard form of PID equation
 // #define KI KP/TI
 // #define KD KP*TD
@@ -58,8 +58,8 @@ Written by Christopher Yue
 #define MELT 4
 #define REFLOW 6
 
-#define HEATING_BUFFER_THRESHOLD 3
-#define CURVE_CONSTANT 15.0
+#define HEATING_BUFFER_THRESHOLD 1.5
+#define CURVE_CONSTANT 10.0
 
 float HEATING_PARAMETERS[8] = {PREHEAT_TEMP, PREHEAT_DURATION, SOAK_TEMP, SOAK_DURATION, MELTING_POINT, RAMP_DURATION, REFLOW_TEMP, REFLOW_DURATION};
 const float INCREMENTS[8] = {2.5, 5, 2.5, 5, 2.5, 5, 2.5, 5};
@@ -108,8 +108,9 @@ long time;
 long START;
 long prevButtonCheckTime = 0;
 long prevCycleTime = 0;
-long heating_start_time = -1;
-float heating_duration = -1;
+float heating_start_time = -1;
+float heating_duration = -1.0;
+float nominal_heating_rate = 0.0;
 
 int phase = PREHEAT; // preheat, soak, reflow, cool
 float targetTemp;
@@ -124,11 +125,10 @@ float ie;
 
 float updateHeatingRates() {
   HEATING_RATES[0] = (HEATING_PARAMETERS[PREHEAT]-temp)/HEATING_PARAMETERS[1];
-  Serial.println(HEATING_RATES[0]);
-  for (int i = SOAK; i <= REFLOW; i+=2) {
+  for (int i = SOAK; i < REFLOW; i+=2) {
     HEATING_RATES[(int)i/2] = (float)(HEATING_PARAMETERS[i] - HEATING_PARAMETERS[i-2]) / HEATING_PARAMETERS[i+1];
-    Serial.println(HEATING_RATES[i]);
   }
+  HEATING_RATES[(int)REFLOW/2] = (float)(HEATING_PARAMETERS[REFLOW] - HEATING_PARAMETERS[MELT]) / (HEATING_PARAMETERS[REFLOW+1]/2);
 }
 
 void incrementValue() {
@@ -168,29 +168,65 @@ void nextValue() {
 
 void setupCornerSmoothing() {
 
+  // 0: start to preheat
+  // 1: preheat to soak
+  // 2: soak to melt
+  // 3: melt to reflow
+  // 4: reflow to cool
+
+
   smoothCorners[0].setup(
-    {0, temp},
-    {CURVE_CONSTANT/2, temp},
-    {CURVE_CONSTANT/2, temp},
-    {CURVE_CONSTANT, temp+10*HEATING_RATES[0]}
+    {0, temp+HEATING_BUFFER_THRESHOLD},
+    {CURVE_CONSTANT/2, temp+HEATING_BUFFER_THRESHOLD},
+    {CURVE_CONSTANT/2, temp+HEATING_BUFFER_THRESHOLD},
+    {CURVE_CONSTANT, temp+CURVE_CONSTANT*HEATING_RATES[0]}
   );
 
   smoothCorners[4].setup(
-    {-CURVE_CONSTANT, HEATING_PARAMETERS[REFLOW] - 10*HEATING_RATES[3]},
-    {-CURVE_CONSTANT/2, HEATING_PARAMETERS[REFLOW] - 5*HEATING_RATES[3]},
+    {-CURVE_CONSTANT, HEATING_PARAMETERS[REFLOW] - CURVE_CONSTANT*HEATING_RATES[3]},
+    {-CURVE_CONSTANT/2, HEATING_PARAMETERS[REFLOW] - (CURVE_CONSTANT/2)*HEATING_RATES[3]},
     {-CURVE_CONSTANT/2, HEATING_PARAMETERS[REFLOW]},
     {0, HEATING_PARAMETERS[REFLOW]}
   );
 
   for (int i = 1; i < 4; i++) {
+    // soak -> melt -> reflow
     smoothCorners[i].setup(
-      {-CURVE_CONSTANT, HEATING_PARAMETERS[2*i]-10*HEATING_RATES[i-1]},
-      {-CURVE_CONSTANT/2, HEATING_PARAMETERS[2*i]-5*HEATING_RATES[i-1]},
-      {CURVE_CONSTANT/2, HEATING_PARAMETERS[2*i]-5*HEATING_RATES[i]},
-      {CURVE_CONSTANT, HEATING_PARAMETERS[2*i]-10*HEATING_RATES[i]}
+      {-CURVE_CONSTANT, HEATING_PARAMETERS[2*(i-1)]-CURVE_CONSTANT*HEATING_RATES[i-1]},
+      {-CURVE_CONSTANT/2, HEATING_PARAMETERS[2*(i-1)]-(CURVE_CONSTANT/2)*HEATING_RATES[i-1]},
+      {CURVE_CONSTANT/2, HEATING_PARAMETERS[2*(i-1)]+(CURVE_CONSTANT/2)*HEATING_RATES[i]},
+      {CURVE_CONSTANT, HEATING_PARAMETERS[2*(i-1)]+CURVE_CONSTANT*HEATING_RATES[i]}
     );
   }
 
+  for (int i = 0; i < 5; i++) {
+    Serial.println(i);
+    for (float j = 0.0; j <= 1.0; j+=0.1) {
+      Serial.print(smoothCorners[i].getTemperatureAtTime(j));
+      Serial.print(", ");
+    }
+  }
+
+}
+
+float getTargetTempAt(long elapsedTimeInPhase, int phase, long duration) {
+  if (phase == PREHEAT && elapsedTimeInPhase <= CURVE_CONSTANT*2000) {
+    return smoothCorners[(int)phase/2].getTemperatureAtTime(elapsedTimeInPhase/(2*CURVE_CONSTANT*1000));
+  }
+  if (elapsedTimeInPhase <= CURVE_CONSTANT*1000) {
+    float t = min(1.0, elapsedTimeInPhase/(2*CURVE_CONSTANT*1000)+0.5);
+    t = round(t*CURVE_CONSTANT)/CURVE_CONSTANT;
+    Serial.print("Bezier smoothing pre ");
+    Serial.println(t);
+    return smoothCorners[(int)phase/2].getTemperatureAtTime(t);
+  } else if (elapsedTimeInPhase >= (duration-CURVE_CONSTANT)*1000) {
+    float t = (elapsedTimeInPhase/1000.0+CURVE_CONSTANT-duration)/(2*CURVE_CONSTANT);
+    t = round(t*CURVE_CONSTANT)/CURVE_CONSTANT;
+    Serial.print("Bezier smoothing post ");
+    Serial.println(t);
+    return smoothCorners[((int)phase/2)+1].getTemperatureAtTime(t);
+  }
+  return -1;
 }
 
 void start() {
@@ -209,6 +245,8 @@ void start() {
 
   updateHeatingRates();
   setupCornerSmoothing();
+
+  nominal_heating_rate = (smoothCorners[1].getTemperatureAtTime(0.0) - smoothCorners[0].getTemperatureAtTime(1.0))/(HEATING_PARAMETERS[1]-3*CURVE_CONSTANT);
 
   gui.printHeating(phase);
 }
@@ -262,7 +300,7 @@ void updateHeating() {
     float de = (error-prevError); // C/s, if error is increasing this is positive meaning that we need to heat faster, if error is decreasing this is negative meaning we need to heat slower
     ie += (error+prevError/2); // rough estimation, we can consider each new point as adding a triangle and a rectangle
 
-    DUTY_CYCLE += KP*(TD*de);
+    DUTY_CYCLE += KP*(error+TD*de);
     if (DUTY_CYCLE < 0) DUTY_CYCLE = 0;
     else if (DUTY_CYCLE > 1) DUTY_CYCLE = 1;
 
@@ -279,25 +317,31 @@ void updateHeating() {
     Serial.print("Error:");
     Serial.println(error);
     
-    if (time - heating_start_time <= CURVE_CONSTANT*1000) {
-      targetTemp = smoothCorners[(int)phase/2].getTemperatureAtTime((time-heating_start_time)/(2*CURVE_CONSTANT*1000)+0.5);
-    } else if (time - heating_start_time >= (heating_duration-CURVE_CONSTANT)*1000) {
-      Serial.println(((time-heating_start_time)/1000.0-heating_duration)/(2*CURVE_CONSTANT));
-      targetTemp = smoothCorners[(int)phase/2+1].getTemperatureAtTime(((time-heating_start_time)/1000.0-heating_duration)/(2*CURVE_CONSTANT));
-    } else if (time-heating_start_time >= heating_duration*1000) {
+    if (time-heating_start_time >= heating_duration*1000) {
       phase+=2;
       heating_start_time = time;
       heating_duration = phase == REFLOW ? HEATING_PARAMETERS[phase+1]/2 : HEATING_PARAMETERS[phase+1];
+
+      float t_next = smoothCorners[(int)phase/2+1].getTemperatureAtTime(0.0);
+      float t_start = smoothCorners[(int)phase/2].getTemperatureAtTime(1.0);
+
+      nominal_heating_rate = heating_duration-CURVE_CONSTANT*2 <= 0.25 ? 0.0 : (t_next-t_start)/(heating_duration-CURVE_CONSTANT*2);
+      Serial.print("Nominal rate ");
+      Serial.println(nominal_heating_rate);
       if (phase > REFLOW) {
         reset();
+        return;
       }
-    } else {
-      targetTemp = min(targetTemp + HEATING_RATES[(int)phase/2] * (PWM_PERIOD/1000), HEATING_PARAMETERS[phase]);
     }
 
+    float targetTemp_temp = targetTemp;
+    targetTemp = getTargetTempAt(time-heating_start_time, phase, heating_duration);
     
+    if (targetTemp + 1 <= 0.05) { // floating point issues
+      targetTemp = min(targetTemp_temp + nominal_heating_rate * (PWM_PERIOD/1000), HEATING_PARAMETERS[phase]);
+    }
 
-    if (DUTY_CYCLE > 0.01) {
+    if (DUTY_CYCLE > 0) {
       digitalWrite(RELAY_P, HIGH);
     } else {
       digitalWrite(RELAY_P, LOW);
