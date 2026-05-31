@@ -47,7 +47,7 @@
 
 ![Heating Curve](media/Heating_Curve_Test.png)
 
-<p>The controller uses a PD algorithm (Kp=0.05, Kd=Kp * Td=0.35) to maintain a mean absolute error of +-1.8 degrees Celsius.</p>
+<p>The controller uses a PD algorithm (Kp=0.05, Kd=Kp*Td=0.35) to maintain a mean absolute error of +-1.8 degrees Celsius.</p>
 <p>The curve shown in this diagram follows a profile given by the datasheet for the ChipQuik NC191SNL15 lead-free solder paste</p>
 
 <h3>Sample testing output</h3>
