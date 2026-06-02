@@ -43,6 +43,10 @@
   </ul>
 </ol>
 
+<h3>Project Photo</h3>
+
+![Main Photo](media/Project_Photo.jpeg)
+
 <h3>BOM</h3>
 
 | Name                          | Description                                                                        | Need to buy? | Cost? |
