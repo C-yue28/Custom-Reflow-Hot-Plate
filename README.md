@@ -47,7 +47,7 @@
 
 | Name                          | Description                                                                        | Need to buy? | Cost? |
 |-------------------------------|------------------------------------------------------------------------------------|--------------|-------|
-| Arduino Uno R3                | Microcontroller unit; central ""brain"" of the project                             | No           |       |
+| Arduino Uno R3                | Microcontroller unit; central "brain" of the project                               | No           |       |
 | LCD1602 (16x2)                | Basic display for user configuration of settings & temperature display             | No           |       |
 | 74HC595                       | Digital IO expander used to control the LCD display                                | No           |       |
 | Small breadboard              | House all of the electronics (I may get a perfboard and solder components on later | No           |       |
