@@ -30,7 +30,7 @@
   </li>
   <ul>
     <li>
-      The peak temperature, achieved during reflow, needs to be tuned so that the sensitive components are not damaged while the solder paste is free to flow; due to the forces of surface tension, the paste will "pull" the pins directly over the copper on the board and ensure a strong connection.
+      The peak temperature, achieved during reflow, needs to be tuned so that the sensitive components are not damaged while the solder paste is free to flow; due to the forces of surface tension, the paste will "pull" the pins directly over the copper on the board.
     </li>
   </ul>
   <li>
