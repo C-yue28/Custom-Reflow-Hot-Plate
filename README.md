@@ -62,6 +62,10 @@
 
 <h3>Technical details</h3>
 
+![Schematic](media/Schematic.png)
+
+<p>Screenshot of the schematic, which is located in the Electronics folder. The main components are the Arduino Uno (microcontroller), relay, thermocouple w/ MAX6675 module, 16x2 LCD, and 74HC595 shift register.</p>
+
 ![Heating Curve](media/Heating_Curve_Test.png)
 
 <p>The controller uses a PD algorithm (Kp=0.05, Kd=Kp*Td=0.35) to maintain a mean absolute error of +-1.8 degrees Celsius.</p>
