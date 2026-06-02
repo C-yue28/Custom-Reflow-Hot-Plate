@@ -43,6 +43,23 @@
   </ul>
 </ol>
 
+<h3>BOM</h3>
+
+| Name                          | Description                                                                        | Need to buy? | Cost? |
+|-------------------------------|------------------------------------------------------------------------------------|--------------|-------|
+| Arduino Uno R3                | Microcontroller unit; central ""brain"" of the project                             | No           |       |
+| LCD1602 (16x2)                | Basic display for user configuration of settings & temperature display             | No           |       |
+| 74HC595                       | Digital IO expander used to control the LCD display                                | No           |       |
+| Small breadboard              | House all of the electronics (I may get a perfboard and solder components on later | No           |       |
+| 10K Potentiometer             | For controlling LED backlight on the LCD display                                   | No           |       |
+| SSR-25DA                      | 25A 120VAC DC-AC solid state relay for controlling heating element                 | Yes          | 11.99 |
+| MAX6675 + K-type thermocouple | Temperature sensing for PID control                                                | Yes          | 3.61  |
+| 2-3 buttons                   | User configuration of settings                                                     | No           |       |
+| Jumper wires                  | Wiring                                                                             | No           |       |
+| Toaster oven                  | Main heating element                                                               | No           |       |
+| Shipping                      |                                                                                    |              | 3.99  |
+| Total                         |                                                                                    |              | 19.59 |
+
 <h3>Technical details</h3>
 
 ![Heating Curve](media/Heating_Curve_Test.png)
