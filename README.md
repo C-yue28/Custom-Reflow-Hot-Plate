@@ -1,5 +1,7 @@
 <h1>Custom Reflow Oven</h1>
 
+![Project Photo](media/Project_Photo.jpeg)
+
 <h3>Why did I make this?</h3>
 <p>Designing and purchasing custom PCBs is expensive. For reference, my first custom devboard was quoted by JLCPCB at around $180, and almost 75% of that was due to assembly costs. Therefore, I sought to cut costs by designing my own at-home PCB assembly system, beginning with the "simplest" part of the process, which is being able to solder on components, both surface-mount and through-hole. This oven will be used to solder surface-mount components which would otherwise be extremely hard to solder by hand otherwise due to high pin density and small pin sizing.</p>
 
